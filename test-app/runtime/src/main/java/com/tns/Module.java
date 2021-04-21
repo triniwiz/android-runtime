@@ -1,7 +1,6 @@
 package com.tns;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,7 +20,7 @@ class Module {
     private static int RootDirsCount;
     private static boolean initialized = false;
     private static String possibleException = null;
-
+    public static String AppRootPath = "/public/nativescript";
     // cache the already resolved absolute paths to folder modules to prevent JSON parsing each time
     private static final HashMap<String, String> folderAsModuleCache = new HashMap<String, String>();
     private static boolean checkForExternalPath = false;
@@ -34,13 +33,17 @@ class Module {
         RootPackageDir = rootPackageDir.getCanonicalPath();
         ApplicationFilesPath = applicationFilesDir.getCanonicalPath();
 
-        ModulesFilesPath = "/app/";
+        ModulesFilesPath = AppRootPath + "/";
 
-        RootDirsCount = (ApplicationFilesPath + "/app").split("/").length;
+        RootDirsCount = (ApplicationFilesPath + AppRootPath).split("/").length;
 
-        NativeScriptModulesFilesPath = ApplicationFilesPath + "/app/tns_modules/tns-core-modules";
+        NativeScriptModulesFilesPath = ApplicationFilesPath + AppRootPath + "/tns_modules/tns-core-modules";
 
         initialized = true;
+    }
+
+    static String getAppRootPath(){
+        return AppRootPath;
     }
 
     static String getApplicationFilesPath() {
@@ -288,7 +291,7 @@ class Module {
             String finalDir = currentDir + "/node_modules";
 
             //TODO: plamen5kov revisit this if we decide to get rid of tns_modules folder
-            if (lastDir.equals("app")) {
+            if (lastDir.equals(AppRootPath.replace("/", ""))) {
                 finalDir = currentDir + "/tns_modules";
             }
 

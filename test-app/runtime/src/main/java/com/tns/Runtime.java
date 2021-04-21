@@ -37,7 +37,7 @@ import java.util.concurrent.RunnableFuture;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Runtime {
-    private native void initNativeScript(int runtimeId, String filesPath, String nativeLibDir, boolean verboseLoggingEnabled, boolean isDebuggable, String packageName,
+    private native void initNativeScript(int runtimeId, String filesPath, String appPath, String nativeLibDir, boolean verboseLoggingEnabled, boolean isDebuggable, String packageName,
                                          Object[] v8Options, String callingDir, int maxLogcatObjectSize, boolean forceLog);
 
     private native void runModule(int runtimeId, String filePath) throws NativeScriptException;
@@ -639,7 +639,7 @@ public class Runtime {
 
             boolean forceConsoleLog = appConfig.getForceLog() || "timeline".equalsIgnoreCase(appConfig.getProfilingMode());
 
-            initNativeScript(getRuntimeId(), Module.getApplicationFilesPath(), nativeLibDir, logger.isEnabled(), isDebuggable, appName, appConfig.getAsArray(),
+            initNativeScript(getRuntimeId(), Module.getApplicationFilesPath(), Module.getAppRootPath(), nativeLibDir, logger.isEnabled(), isDebuggable, appName, appConfig.getAsArray(),
                     callingJsDir, appConfig.getMaxLogcatObjectSize(), forceConsoleLog);
 
             //clearStartupData(getRuntimeId()); // It's safe to delete the data after the V8 debugger is initialized

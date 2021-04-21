@@ -165,25 +165,25 @@ ObjectManager* Runtime::GetObjectManager() const {
     return m_objectManager;
 }
 
-void Runtime::Init(JNIEnv* _env, jobject obj, int runtimeId, jstring filesPath, jstring nativeLibDir, jboolean verboseLoggingEnabled, jboolean isDebuggable, jstring packageName, jobjectArray args, jstring callingDir, int maxLogcatObjectSize, bool forceLog) {
+void Runtime::Init(JNIEnv* _env, jobject obj, int runtimeId, jstring filesPath, jstring appRoot, jstring nativeLibDir, jboolean verboseLoggingEnabled, jboolean isDebuggable, jstring packageName, jobjectArray args, jstring callingDir, int maxLogcatObjectSize, bool forceLog) {
     JEnv env(_env);
 
     auto runtime = new Runtime(env, obj, runtimeId);
 
     auto enableLog = verboseLoggingEnabled == JNI_TRUE;
 
-    runtime->Init(env, filesPath, nativeLibDir, enableLog, isDebuggable, packageName, args, callingDir, maxLogcatObjectSize, forceLog);
+    runtime->Init(env, filesPath, appRoot, nativeLibDir, enableLog, isDebuggable, packageName, args, callingDir, maxLogcatObjectSize, forceLog);
 }
 
-void Runtime::Init(JNIEnv* env, jstring filesPath, jstring nativeLibDir, bool verboseLoggingEnabled, bool isDebuggable, jstring packageName, jobjectArray args, jstring callingDir, int maxLogcatObjectSize, bool forceLog) {
+void Runtime::Init(JNIEnv* env, jstring filesPath, jstring appRoot, jstring nativeLibDir, bool verboseLoggingEnabled, bool isDebuggable, jstring packageName, jobjectArray args, jstring callingDir, int maxLogcatObjectSize, bool forceLog) {
     LogEnabled = verboseLoggingEnabled;
 
     auto filesRoot = ArgConverter::jstringToString(filesPath);
     auto nativeLibDirStr = ArgConverter::jstringToString(nativeLibDir);
     auto packageNameStr = ArgConverter::jstringToString(packageName);
     auto callingDirStr = ArgConverter::jstringToString(callingDir);
-
-    Constants::APP_ROOT_FOLDER_PATH = filesRoot + "/app/";
+    auto appRootDir = ArgConverter::jstringToString(appRoot);
+    Constants::APP_ROOT_FOLDER_PATH = filesRoot + appRootDir + "/";
     // read config options passed from Java
     JniLocalRef v8Flags(env->GetObjectArrayElement(args, 0));
     Constants::V8_STARTUP_FLAGS = ArgConverter::jstringToString(v8Flags);
